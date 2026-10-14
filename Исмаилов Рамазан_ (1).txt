@@ -1,0 +1,79 @@
+data_tuple = ('h', 6.13, 'C', ['e', 'T'], True, 'k', 'e', '3', 'e', 1, ('g', 'x'), False)
+
+# --- 1. ГЛУБОКОЕ РАЗДЕЛЕНИЕ С ВАЛИДАЦИЕЙ И ПРЕОБРАЗОВАНИЕМ ---
+letters = []
+numbers = []
+booleans = []
+
+def unpack_and_validate(data):
+    for item in data:
+        if isinstance(item, (list, tuple)):
+            unpack_and_validate(item)
+        elif isinstance(item, bool):
+            # Важное условие: bool проверяем ПЕРВЫМ, так как он является подклассом int
+            booleans.append(item)
+        elif isinstance(item, (int, float)):
+            numbers.append(item)
+        elif isinstance(item, str):
+            if item.isdigit():
+                numbers.append(int(item))  # Преобразование строки '3' в число 3
+            else:
+                letters.append(item)
+
+unpack_and_validate(data_tuple)
+
+# --- 2. ПОИСК И ПЕРЕМЕЩЕНИЕ ПО УСЛОВИЮ ---
+# Удаление 6.13 без падения с ошибкой
+if 6.13 in numbers:
+    numbers.remove(6.13)
+
+# Перемещаем булевые значения в самый конец списка letters в порядке их появления
+letters.extend(booleans)
+
+# Вставляем число 2 строго между 3 и 1
+if 3 in numbers and 1 in numbers:
+    idx_3 = numbers.index(3)
+    idx_1 = numbers.index(1)
+    insert_idx = min(idx_3, idx_1) + 1
+    numbers.insert(insert_idx, 2)
+
+# --- 3. СОРТИРОВКА И КАСТОМНАЯ МОДИФИКАЦИЯ ---
+# Сортировка numbers по убыванию (descending)
+numbers.sort(reverse=True)
+
+# Разворачиваем список letters задом наперёд с помощью срезов
+letters = letters[::-1]
+
+# Изменяем регистр всех букв на противоположный
+letters = [item.swapcase() if isinstance(item, str) else item for item in letters]
+
+# --- 4. СЛОВЕСНЫЙ КОНСТРУКТОР И ФИНАЛ ---
+# Отделяем буквы от булевых значений, которые сейчас лежат в начале (из-за среза [::-1])
+current_letters = [x for x in letters if isinstance(x, str)]
+current_bools = [x for x in letters if isinstance(x, bool)]
+
+# Разворачиваем булевые значения обратно, чтобы вернуть их исходный порядок появления (True, затем False)
+current_bools = current_bools[::-1]
+
+# Собираем слово "Cheetah" (Гепард) из имеющихся букв
+target_word = "Cheetah"
+built_word_list = []
+
+for char in target_word:
+    found = False
+    for item in current_letters:
+        if item.lower() == char.lower():
+            built_word_list.append(char)
+            found = True
+            break
+    if not found:
+        built_word_list.append(char)
+
+final_word = "".join(built_word_list)
+
+# Собираем финальный список letters: слово + булевы значения в конце
+letters = [final_word] + current_bools
+
+# --- ВЫВОД РЕЗУЛЬТАТОВ ---
+print("Итоговый список numbers:", numbers)
+print("Итоговый список letters:", letters)

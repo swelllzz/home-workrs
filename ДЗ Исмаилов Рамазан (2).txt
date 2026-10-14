@@ -1,0 +1,28 @@
+# Заранее заданные учетные данные
+correct_login = "admin"
+correct_password = "12345"
+
+# Количество доступных попыток
+attempts = 3
+
+while attempts > 0:
+    # Ввод данных пользователем
+    login = input("Введите логин: ")
+    password = input("Введите пароль: ")
+    
+    # Проверка логина и пароля
+    if login == correct_login and password == correct_password:
+        print("Добро пожаловать!")
+        break
+    else:
+        attempts -= 1  # Уменьшаем количество попыток
+        print("Неверный логин или пароль")
+        
+        # Если попытки еще остались, выводим их количество
+        if attempts > 0:
+            print(f"Осталось попыток: {attempts}")
+        else:
+            print("Аккаунт заблокирован")
+
+
+

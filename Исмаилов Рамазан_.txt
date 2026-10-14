@@ -1,0 +1,45 @@
+flags = {
+    'ru': {'red blue', 'white'},
+    'kg': {"red yellow", 'red'},
+    'ua': {"red blue", 'red', 'blue'},
+    'uk': {"yellow", "blue"},
+    'kz': {'blue yellow', 'blue'}
+}
+
+# 1. Добавляем еще 3 домена с цветами флагов
+flags['by'] = {'red', 'green', 'white'}
+flags['pl'] = {'white', 'red'}
+flags['fr'] = {'blue', 'white', 'red'}
+
+print("Программа поиска доменов по цвету флага запущенна.")
+print("Для выхода из программы введите 'exit' или 'выход'.\n")
+
+# Бесконечный цикл с возможностью выхода
+while True:
+    user_input = input("Введите цвета флагов (например: red yellow): ").strip().lower()
+    
+    # Условие выхода из программы
+    if user_input in ['exit', 'выход']:
+        print("Программа завершена. До свидания!")
+        break
+        
+    if not user_input:
+        print("Вы ничего не ввели. Попробуйте еще раз.")
+        continue
+
+    found_domains = []
+
+    # Поиск доменов, у которых цвета соответствуют запросу пользователя
+    for domain, colors in flags.items():
+        for color_set in colors:
+            # Проверяем, содержится ли введенный текст в описании цветов флага
+            if user_input in color_set:
+                found_domains.append(domain)
+                break  # Чтобы не добавлять один домен дважды, если совпало несколько тегов
+
+    # Вывод результата
+    if found_domains:
+        print(f"Домены с такими цветами: {', '.join(found_domains)}")
+    else:
+        print("Домены с такими цветами не найдены.")
+    print("-" * 40)
